@@ -9,9 +9,9 @@ import pickle
 import random
 
 from stat_parser import Parser, display_tree
-from nltk.chunk import ne_chunk
-from nltk.tag import pos_tag
-from nltk.tokenize import word_tokenize
+#from nltk.chunk import ne_chunk
+#from nltk.tag import pos_tag
+#from nltk.tokenize import word_tokenize
 
 import nltk
 
@@ -173,7 +173,7 @@ def parse(sentenace):
     tree_output_str=""
     for a in tree_output  :
          tree_output_str +=" - " + a
-
+    print  tree_output_str
     special_parses=[
     "WRB - JJ - NNS"                   ,#   how many Leopards
     "WRB - JJ - JJ"                    ,#   how many leopards
@@ -330,10 +330,9 @@ def talk_to_lina(test_set_sentance):
 
 
 
-
 while True:
     var = raw_input("Talk to Lina: ")
-    #var ="set alarm to 5am"
+    #var ="where is egypt"
     result = intents(var)
 
     if(result[1] =="normal setance"):
@@ -369,7 +368,10 @@ while True:
         print "certainty : "        +  result[2]
         print "certainty level : "  +  result[3]
         print 
-
+        
+    tree_output = []
+    imp_list_array["Noun"]=[]
+    tree_output_str = ""
 
 
 
