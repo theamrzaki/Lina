@@ -162,8 +162,12 @@ def traverse(parent , x):
              a=5
 
 def parse(sentenace):
+
     parser = Parser()
-    tree = parser.parse(sentenace) 
+    try:
+        tree = parser.parse(sentenace) 
+    except:
+         return False,""
 
     #display_tree(tree)
 
@@ -191,7 +195,9 @@ def parse(sentenace):
     "WDT - NNS"                        ,#   which companies are the biggest ,
      "WRB - VBZ - NN"                   , #where is egypt
      "WP - VBZ - NNP"                    ,#what is Egypt
-     "WP - VBZ - JJ"                      #what is egypt
+     "WP - VBZ - JJ"                     , #what is egypt
+      "WRB - VBD - NNP"                , #when did Bayern 
+      "WP - VBZ - NN"                   #what is indonesian
      ]
 
     
@@ -233,36 +239,23 @@ def parse(sentenace):
         except:
              return False,""
 
-#-------------------------General DataSet--------------------------------#
-def talk_to_lina(test_set_sentance):
+#-----------------------General DataSet   &   Movies Lines----------------#
+
+def talk_to_lina(test_set_sentance , csv_file_path,tfidf_vectorizer_pikle_path ,tfidf_matrix_train_pikle_path):
+
     i=0
     sentences=[]
 
     #enter your test sentance 
     test_set = (test_set_sentance,"")
 
-
-    #malaksh da3awa beeh
-    #sentences.append(" No you.")
-
-    #tell which sentance to stop training at
-    #stop_at_sentence =20
-
-
-    
-
-
-
-
-    import pickle
-
     try:
         ##--------------to use------------------#
-         f = open('tfidf_vectorizer_april.pickle', 'rb')
+         f = open(tfidf_vectorizer_pikle_path, 'rb')
          tfidf_vectorizer = pickle.load(f)
          f.close()
          
-         f = open('tfidf_matrix_train_april.pickle', 'rb')
+         f = open(tfidf_matrix_train_pikle_path, 'rb')
          tfidf_matrix_train = pickle.load(f)
          f.close()
         #----------------------------------------#
@@ -271,7 +264,7 @@ def talk_to_lina(test_set_sentance):
         start = timeit.default_timer()
     
          #enter jabberwakky sentance
-        with open("Lina_all.csv", "r") as sentences_file:
+        with open(csv_file_path, "r") as sentences_file:
              reader = csv.reader(sentences_file, delimiter=',')
              #reader.next()
              #reader.next()
@@ -288,11 +281,11 @@ def talk_to_lina(test_set_sentance):
         print ("training time took was : ")
         print stop - start 
 
-        f = open('tfidf_vectorizer_april.pickle', 'wb')
+        f = open(tfidf_vectorizer_pikle_path, 'wb')
         pickle.dump(tfidf_vectorizer, f)
         f.close()
         
-        f = open('tfidf_matrix_train_april.pickle', 'wb')
+        f = open(tfidf_matrix_train_pikle_path, 'wb')
         pickle.dump(tfidf_matrix_train, f)
         f.close()
         #-----------------------------------------#
@@ -307,9 +300,9 @@ def talk_to_lina(test_set_sentance):
     max = cosine.max()
     response_index =0
     if(max>0.7):
-         new_max = max-0.05
+         new_max = max-0.01
          list = np.where(cosine > new_max)
-         print ("number of responses with 0.05 from max = " + str(list[0].size) )
+         print ("number of responses with 0.01 from max = " + str(list[0].size) )
          response_index = random.choice(list[0])
 
     else:
@@ -318,16 +311,15 @@ def talk_to_lina(test_set_sentance):
         response_index = np.where(cosine == max)[0][0] +2# no offset at all +3
 
     j=0
-    with open("Lina_all.csv", "r") as sentences_file:
+    with open(csv_file_path, "r") as sentences_file:
        reader = csv.reader(sentences_file, delimiter=',')
        for row in reader:
            j += 1 # we begin with 1 not 0 &    j is initialized by 0
            if j == response_index: 
                return row[1]
                break
-   
-#-------------------------------------------------------------------------#
 
+#-------------------------------------------------------------------------#
 
 
 while True:
@@ -339,11 +331,40 @@ while True:
         fact_question = parse(var)  
         if(fact_question[0]):
             print "Fact Question"
-            print fact_question[1]
+            print fact_question[1].encode('utf-8')
 
         else:
             print "action : "  +  result[0]
-            print "Lina : "    +  talk_to_lina(var)
+            print ("ENTER CHARACTER:")                                                            
+            print ("general:0   action:1   animation:2   comedy:3   crime:4  drama:5   fantasy:6    filmnoir:7   horror:8  romance:9   scifi:10   war:11")
+            option = int(raw_input("enter option as number: ")   )
+
+            if option==0:
+                print "Lina : "    +  talk_to_lina(var,"Lina_all.csv"                           ,   "tfidf_vectorizer_april.pickle"                  ,"tfidf_matrix_train_april.pickle")
+            elif option==1:
+                print "Lina : "    +  talk_to_lina(var,"Conversations/action_conversation.csv"  ,  'Conversations/tfidf_vectorizer_action.pickle'     , 'Conversations/tfidf_matrix_train_action.pickle')
+            elif option==2:
+                print "Lina : "    +  talk_to_lina(var,"Conversations/animation_conversation.csv" , 'Conversations/tfidf_vectorizer_animation.pickle' ,'Conversations/tfidf_matrix_train_animation.pickle')
+            elif option==3:
+                print "Lina : "    +  talk_to_lina(var,"Conversations/comedy_conversation.csv"    ,'Conversations/tfidf_vectorizer_comedy.pickle'     ,'Conversations/tfidf_matrix_train_comedy.pickle')
+            elif option==4:
+                print "Lina : "    +  talk_to_lina(var,"Conversations/crime_conversation.csv"    ,'Conversations/tfidf_vectorizer_crime.pickle'      ,'Conversations/tfidf_matrix_train_crime.pickle')
+            elif option==5:
+                print "Lina : "    +  talk_to_lina(var,"Conversations/drama_conversation.csv"   ,'Conversations/tfidf_vectorizer_drama.pickle'       ,'Conversations/tfidf_matrix_train_drama.pickle')
+            elif option==6:
+                print "Lina : "    +  talk_to_lina(var,"Conversations/fantasy_conversation.csv" ,'Conversations/tfidf_vectorizer_fantasy.pickle'    ,'Conversations/tfidf_matrix_train_fantasy.pickle')
+            elif option==7:
+                print "Lina : "    +  talk_to_lina(var,"Conversations/film-noir.csv_conversation.csv" ,'Conversations/tfidf_vectorizer_film-noir.pickle','Conversations/tfidf_matrix_train_film-noir.pickle')
+            elif option==8:
+                print "Lina : "    +  talk_to_lina(var,"Conversations/horror_conversation.csv"   ,'Conversations/tfidf_vectorizer_horror.pickle'        ,'Conversations/tfidf_matrix_train_horror.pickle')
+            elif option==9:
+                print "Lina : "    +  talk_to_lina(var,"Conversations/romance_conversation.csv",'Conversations/tfidf_vectorizer_romance.pickle'         ,'Conversations/tfidf_matrix_train_romance.pickle')
+            elif option==10:
+                print "Lina : "    +  talk_to_lina(var,"Conversations/sci-fi_conversation.csv" ,'Conversations/tfidf_vectorizer_sci-fi.pickle'          ,'Conversations/tfidf_matrix_train_sci-fi.pickle')
+            elif option==11:
+                print "Lina : "    +  talk_to_lina(var,"Conversations/war_conversation.csv"   ,'Conversations/tfidf_vectorizer_war.pickle'              ,'Conversations/tfidf_matrix_train_war.pickle')
+
+
             print
 
 
