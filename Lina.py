@@ -249,6 +249,10 @@ def talk_to_lina(test_set_sentance , csv_file_path,tfidf_vectorizer_pikle_path ,
     #enter your test sentance 
     test_set = (test_set_sentance,"")
 
+    #3ashan yzabt el indexes
+    sentences.append(" No you.")
+    sentences.append(" No you.")
+
     try:
         ##--------------to use------------------#
          f = open(tfidf_vectorizer_pikle_path, 'rb')
@@ -311,13 +315,45 @@ def talk_to_lina(test_set_sentance , csv_file_path,tfidf_vectorizer_pikle_path ,
         response_index = np.where(cosine == max)[0][0] +2# no offset at all +3
 
     j=0
+
     with open(csv_file_path, "r") as sentences_file:
        reader = csv.reader(sentences_file, delimiter=',')
        for row in reader:
            j += 1 # we begin with 1 not 0 &    j is initialized by 0
            if j == response_index: 
-               return row[1]
+               return row[1] ,response_index,
                break
+
+#-------------------------------------------------------------------------#
+
+#-----------------------Edit Module (RealTime Learn)----------------------#
+def edit_real_time(dataset_number,LineID):
+
+   dataset_path=["Lina_all.csv"                                   ,
+                 "Conversations/action_conversation.csv"          ,
+                 "Conversations/animation_conversation.csv"       ,
+                 "Conversations/comedy_conversation.csv"          ,
+                 "Conversations/crime_conversation.csv"           ,
+                 "Conversations/drama_conversation.csv"           ,
+                 "Conversations/fantasy_conversation.csv"         ,
+                 "Conversations/film-noir.csv_conversation.csv"   ,
+                 "Conversations/horror_conversation.csv"          ,
+                 "Conversations/romance_conversation.csv"         ,
+                 "Conversations/sci-fi_conversation.csv"          ,
+                 "Conversations/war_conversation.csv"             ]
+   new_sentance = raw_input("Your edit to the previous Lina's response : ")
+   try:
+       f = open(dataset_path[dataset_number], 'r')
+       reader = csv.reader(f)
+       mylist = list(reader)
+       f.close()
+       mylist[LineID-1][1] += "_+^$#*#$^+_" +   new_sentance
+       my_new_list = open(dataset_path[dataset_number], 'wb')
+       csv_writer = csv.writer(my_new_list)
+       csv_writer.writerows(mylist)
+       my_new_list.close()
+   except:
+        pass
 
 #-------------------------------------------------------------------------#
 
@@ -332,6 +368,7 @@ while True:
         if(fact_question[0]):
             print "Fact Question"
             print fact_question[1].encode('utf-8')
+            print
 
         else:
             print "action : "  +  result[0]
@@ -340,33 +377,49 @@ while True:
             option = int(raw_input("enter option as number: ")   )
 
             if option==0:
-                print "Lina : "    +  talk_to_lina(var,"Lina_all.csv"                           ,   "tfidf_vectorizer_april.pickle"                  ,"tfidf_matrix_train_april.pickle")
+                  response,line_id =   talk_to_lina(var,"Lina_all.csv"                           ,   "tfidf_vectorizer_april.pickle"                  ,"tfidf_matrix_train_april.pickle")
+                  
             elif option==1:
-                print "Lina : "    +  talk_to_lina(var,"Conversations/action_conversation.csv"  ,  'Conversations/tfidf_vectorizer_action.pickle'     , 'Conversations/tfidf_matrix_train_action.pickle')
+                  response,line_id = talk_to_lina(var,"Conversations/action_conversation.csv"  ,  'Conversations/tfidf_vectorizer_action.pickle'     , 'Conversations/tfidf_matrix_train_action.pickle')
+              
             elif option==2:
-                print "Lina : "    +  talk_to_lina(var,"Conversations/animation_conversation.csv" , 'Conversations/tfidf_vectorizer_animation.pickle' ,'Conversations/tfidf_matrix_train_animation.pickle')
+                  response,line_id =  talk_to_lina(var,"Conversations/animation_conversation.csv" , 'Conversations/tfidf_vectorizer_animation.pickle' ,'Conversations/tfidf_matrix_train_animation.pickle')
+              
             elif option==3:
-                print "Lina : "    +  talk_to_lina(var,"Conversations/comedy_conversation.csv"    ,'Conversations/tfidf_vectorizer_comedy.pickle'     ,'Conversations/tfidf_matrix_train_comedy.pickle')
+                  response,line_id =  talk_to_lina(var,"Conversations/comedy_conversation.csv"    ,'Conversations/tfidf_vectorizer_comedy.pickle'     ,'Conversations/tfidf_matrix_train_comedy.pickle')
+              
             elif option==4:
-                print "Lina : "    +  talk_to_lina(var,"Conversations/crime_conversation.csv"    ,'Conversations/tfidf_vectorizer_crime.pickle'      ,'Conversations/tfidf_matrix_train_crime.pickle')
+                 response,line_id =  talk_to_lina(var,"Conversations/crime_conversation.csv"    ,'Conversations/tfidf_vectorizer_crime.pickle'      ,'Conversations/tfidf_matrix_train_crime.pickle')
+             
             elif option==5:
-                print "Lina : "    +  talk_to_lina(var,"Conversations/drama_conversation.csv"   ,'Conversations/tfidf_vectorizer_drama.pickle'       ,'Conversations/tfidf_matrix_train_drama.pickle')
+                  response,line_id =  talk_to_lina(var,"Conversations/drama_conversation.csv"   ,'Conversations/tfidf_vectorizer_drama.pickle'       ,'Conversations/tfidf_matrix_train_drama.pickle')
+             
             elif option==6:
-                print "Lina : "    +  talk_to_lina(var,"Conversations/fantasy_conversation.csv" ,'Conversations/tfidf_vectorizer_fantasy.pickle'    ,'Conversations/tfidf_matrix_train_fantasy.pickle')
+                 response,line_id =  talk_to_lina(var,"Conversations/fantasy_conversation.csv" ,'Conversations/tfidf_vectorizer_fantasy.pickle'    ,'Conversations/tfidf_matrix_train_fantasy.pickle')
+            
             elif option==7:
-                print "Lina : "    +  talk_to_lina(var,"Conversations/film-noir.csv_conversation.csv" ,'Conversations/tfidf_vectorizer_film-noir.pickle','Conversations/tfidf_matrix_train_film-noir.pickle')
+                 response,line_id = talk_to_lina(var,"Conversations/film-noir.csv_conversation.csv" ,'Conversations/tfidf_vectorizer_film-noir.pickle','Conversations/tfidf_matrix_train_film-noir.pickle')
+             
             elif option==8:
-                print "Lina : "    +  talk_to_lina(var,"Conversations/horror_conversation.csv"   ,'Conversations/tfidf_vectorizer_horror.pickle'        ,'Conversations/tfidf_matrix_train_horror.pickle')
+                 response,line_id =  talk_to_lina(var,"Conversations/horror_conversation.csv"   ,'Conversations/tfidf_vectorizer_horror.pickle'        ,'Conversations/tfidf_matrix_train_horror.pickle')
+             
             elif option==9:
-                print "Lina : "    +  talk_to_lina(var,"Conversations/romance_conversation.csv",'Conversations/tfidf_vectorizer_romance.pickle'         ,'Conversations/tfidf_matrix_train_romance.pickle')
+                 response,line_id =  talk_to_lina(var,"Conversations/romance_conversation.csv",'Conversations/tfidf_vectorizer_romance.pickle'         ,'Conversations/tfidf_matrix_train_romance.pickle')
+             
             elif option==10:
-                print "Lina : "    +  talk_to_lina(var,"Conversations/sci-fi_conversation.csv" ,'Conversations/tfidf_vectorizer_sci-fi.pickle'          ,'Conversations/tfidf_matrix_train_sci-fi.pickle')
+                 response,line_id =  talk_to_lina(var,"Conversations/sci-fi_conversation.csv" ,'Conversations/tfidf_vectorizer_sci-fi.pickle'          ,'Conversations/tfidf_matrix_train_sci-fi.pickle')
+              
             elif option==11:
-                print "Lina : "    +  talk_to_lina(var,"Conversations/war_conversation.csv"   ,'Conversations/tfidf_vectorizer_war.pickle'              ,'Conversations/tfidf_matrix_train_war.pickle')
-
+                  response,line_id =  talk_to_lina(var,"Conversations/war_conversation.csv"   ,'Conversations/tfidf_vectorizer_war.pickle'              ,'Conversations/tfidf_matrix_train_war.pickle')
 
             print
 
+            print ("Lina :  " +  response)
+            edit_option = raw_input("Do you need to edit the response of the question ?? y/n :")
+
+            if(edit_option=="y") :
+                  edit_real_time(option , line_id)
+            print
 
 
     else:# can be an intent
