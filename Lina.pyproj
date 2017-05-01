@@ -22,6 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="filter.py" />
     <Compile Include="Lina.py" />
     <Compile Include="stat_parser\eval_parser.py" />
     <Compile Include="stat_parser\learn.py" />
@@ -37,6 +38,8 @@
     <Compile Include="stat_parser\__init__.py" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Conversations\" />
+    <Folder Include="cursing\" />
     <Folder Include="stat_parser\" />
     <Folder Include="stat_parser\temp\" />
     <Folder Include="stat_parser\treebanks\" />
@@ -44,6 +47,32 @@
     <Folder Include="stat_parser\treebanks\QuestionBank\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Conversations\action_conversation.csv" />
+    <Content Include="Conversations\animation_conversation.csv" />
+    <Content Include="Conversations\comedy_conversation.csv" />
+    <Content Include="Conversations\crime_conversation.csv" />
+    <Content Include="Conversations\drama_conversation.csv" />
+    <Content Include="Conversations\fantasy_conversation.csv" />
+    <Content Include="Conversations\film-noir.csv_conversation.csv" />
+    <Content Include="Conversations\horror_conversation.csv" />
+    <Content Include="Conversations\romance_conversation.csv" />
+    <Content Include="Conversations\sci-fi_conversation.csv" />
+    <Content Include="Conversations\tfidf_matrix_train_crime.pickle" />
+    <Content Include="Conversations\tfidf_matrix_train_drama.pickle" />
+    <Content Include="Conversations\tfidf_matrix_train_fantasy.pickle" />
+    <Content Include="Conversations\tfidf_matrix_train_film-noir.pickle" />
+    <Content Include="Conversations\tfidf_matrix_train_horror.pickle" />
+    <Content Include="Conversations\tfidf_matrix_train_romance.pickle" />
+    <Content Include="Conversations\tfidf_matrix_train_sci-fi.pickle" />
+    <Content Include="Conversations\tfidf_vectorizer_crime.pickle" />
+    <Content Include="Conversations\tfidf_vectorizer_drama.pickle" />
+    <Content Include="Conversations\tfidf_vectorizer_fantasy.pickle" />
+    <Content Include="Conversations\tfidf_vectorizer_film-noir.pickle" />
+    <Content Include="Conversations\tfidf_vectorizer_horror.pickle" />
+    <Content Include="Conversations\tfidf_vectorizer_romance.pickle" />
+    <Content Include="Conversations\tfidf_vectorizer_sci-fi.pickle" />
+    <Content Include="Conversations\war_conversation.csv" />
+    <Content Include="cursing\curses.pickle" />
     <Content Include="intents - Copy.csv" />
     <Content Include="Lina_all.csv" />
     <Content Include="stat_parser\.gitignore" />

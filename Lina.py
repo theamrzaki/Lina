@@ -8,6 +8,8 @@ import timeit
 import pickle
 import random
 
+
+
 from stat_parser import Parser, display_tree
 #from nltk.chunk import ne_chunk
 #from nltk.tag import pos_tag
@@ -20,8 +22,8 @@ import re
 from bs4 import BeautifulSoup
 import requests
 
-
-
+#_____Curse Fiter_____
+import filter
 
 
 #-------------------------TF-IDF cosine similarity for intnents--------------------------------#
@@ -341,19 +343,25 @@ def edit_real_time(dataset_number,LineID):
                  "Conversations/romance_conversation.csv"         ,
                  "Conversations/sci-fi_conversation.csv"          ,
                  "Conversations/war_conversation.csv"             ]
+   print
    new_sentance = raw_input("Your edit to the previous Lina's response : ")
-   try:
-       f = open(dataset_path[dataset_number], 'r')
-       reader = csv.reader(f)
-       mylist = list(reader)
-       f.close()
-       mylist[LineID-1][1] += "_+^$#*#$^+_" +   new_sentance
-       my_new_list = open(dataset_path[dataset_number], 'wb')
-       csv_writer = csv.writer(my_new_list)
-       csv_writer.writerows(mylist)
-       my_new_list.close()
-   except:
-        pass
+   if  filter.curse_no_marks(new_sentance) :    
+       try:
+           f = open(dataset_path[dataset_number], 'r')
+           reader = csv.reader(f)
+           mylist = list(reader)
+           f.close()
+           mylist[LineID-1][1] += "_+^$#*#$^+_" +   new_sentance
+           my_new_list = open(dataset_path[dataset_number], 'wb')
+           csv_writer = csv.writer(my_new_list)
+           csv_writer.writerows(mylist)
+           my_new_list.close()
+           print ("thanks for your support")
+           print
+       except:
+            pass
+   else:
+        print ("contains swear word")
 
 #-------------------------------------------------------------------------#
 
