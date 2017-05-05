@@ -25,6 +25,9 @@ import requests
 #_____Curse Fiter_____
 import filter
 
+#-----------------------------------$$ Global Variables $$-------------------------------------#
+delimeter = "_+^$#*#$^+_"
+
 
 #-------------------------TF-IDF cosine similarity for intnents--------------------------------#
 def intents(intnent_test_sentence):
@@ -323,6 +326,15 @@ def talk_to_lina(test_set_sentance , csv_file_path,tfidf_vectorizer_pikle_path ,
        for row in reader:
            j += 1 # we begin with 1 not 0 &    j is initialized by 0
            if j == response_index: 
+
+               if delimeter in row[1]: 
+                   #get newest suggestion
+                   answer_row =  row[1].split(delimeter)
+                   row[1]  = answer_row[1]
+
+               else: #add new suggestion
+                   note="just return old original suggestion"
+
                return row[1] ,response_index,
                break
 
@@ -351,7 +363,15 @@ def edit_real_time(dataset_number,LineID):
            reader = csv.reader(f)
            mylist = list(reader)
            f.close()
-           mylist[LineID-1][1] += "_+^$#*#$^+_" +   new_sentance
+
+           if delimeter in mylist[LineID-1][1]: 
+               #discard old suggestion
+               answer_row =  mylist[LineID-1][1].split(delimeter)
+               mylist[LineID-1][1]  = answer_row[0]  + delimeter +    new_sentance
+
+           else: #add new suggestion
+                mylist[LineID-1][1] += delimeter +   new_sentance
+
            my_new_list = open(dataset_path[dataset_number], 'wb')
            csv_writer = csv.writer(my_new_list)
            csv_writer.writerows(mylist)
