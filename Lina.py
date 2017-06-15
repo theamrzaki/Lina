@@ -3,6 +3,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 import csv
+import os
 
 import timeit
 import pickle
@@ -27,7 +28,7 @@ import filter
 
 #-----------------------------------$$ Global Variables $$-------------------------------------#
 delimeter = "_+^$#*#$^+_"
-
+dir = os.path.dirname(__file__)
 
 #-------------------------TF-IDF cosine similarity for intnents--------------------------------#
 def intents(intnent_test_sentence):
@@ -35,14 +36,17 @@ def intents(intnent_test_sentence):
     intents_sentences=[]
     intents_sentences.append("intent")#just to adjuxt index
     test_set = (intnent_test_sentence,"")
+    tfidf_vectorizer_intent_path = os.path.join(dir, 'tfidf_vectorizer_intent.pickle')
+    tfidf_matrix_train_intent_path = os.path.join(dir, 'tfidf_matrix_train_intent.pickle')
+    intents_copy_path = os.path.join(dir, "intents - Copy.csv")
 
     try:
          #--------------to use----------------------#
-         f = open('tfidf_vectorizer_intent.pickle', 'rb')
+         f = open(tfidf_vectorizer_intent_path, 'rb')
          tfidf_vectorizer = pickle.load(f)
          f.close()
 
-         f = open('tfidf_matrix_train_intent.pickle', 'rb')
+         f = open(tfidf_matrix_train_intent_path, 'rb')
          tfidf_matrix_train = pickle.load(f)
          f.close()
          #-----------------------------------------#
@@ -93,7 +97,7 @@ def intents(intnent_test_sentence):
             "yourselves"])
     
          i=0
-         with open("intents - Copy.csv", "r") as sentences_file:
+         with open(intents_copy_path, "r") as sentences_file:
              reader = csv.reader(sentences_file, delimiter=',')
              for row in reader:
                  a= row[0]
@@ -103,11 +107,11 @@ def intents(intnent_test_sentence):
          tfidf_vectorizer = TfidfVectorizer(min_df=1, ngram_range=(1, 2), stop_words=ENGLISH_STOP_WORDS)#stop_words='english'
          tfidf_matrix_train = tfidf_vectorizer.fit_transform(intents_sentences)  #finds the tfidf score with normalization
     
-         f = open('tfidf_vectorizer_intent.pickle', 'wb')
+         f = open(tfidf_vectorizer_intent_path, 'wb')
          pickle.dump(tfidf_vectorizer, f)
          f.close()
 
-         f = open('tfidf_matrix_train_intent.pickle', 'wb')
+         f = open(tfidf_matrix_train_intent_path, 'wb')
          pickle.dump(tfidf_matrix_train, f)
          f.close()
          # ----------------------------------------#
@@ -124,7 +128,7 @@ def intents(intnent_test_sentence):
     
 
     j=0
-    with open("intents - Copy.csv", "r") as sentences_file:
+    with open(intents_copy_path, "r") as sentences_file:
        reader = csv.reader(sentences_file, delimiter=',')
        for row in reader:
            j += 1 # we begin with 1 not 0 &    j is initialized by 0
