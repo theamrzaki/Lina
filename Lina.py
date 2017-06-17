@@ -222,7 +222,6 @@ def parse(sentence):
     ]
 
     try:
-        print("not what do you know about egypt")
         # other special parses
         regex = reduce(lambda x, y: x + "|" + y, special_parses)
         print tree_output_str
@@ -234,7 +233,7 @@ def parse(sentence):
         fact_question = ' '.join(sentence.split()[pos_var:])
 
         print("it is a fact question")
-        base_address = "http://api.duckduckgo.com/?q=" + fact_question + "&format=xml"
+        base_address = "https://api.duckduckgo.com/?q=" + fact_question + "&format=xml"
 
         super_page = requests.get(base_address)
         print("request succeeded")
