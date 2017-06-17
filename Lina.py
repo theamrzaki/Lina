@@ -240,8 +240,9 @@ def parse(sentence):
         try:
             print("not what do you know about egypt")
             # other special parses
-            regex = reduce(lambda x, y: x + " | " + y, special_parses)
+            regex = reduce(lambda x, y: x + "|" + y, special_parses)
             print ("regex", regex)
+            print re.search(regex, tree_output_str).group(0)
             pos_tree_output = tree_output_str.index(re.search(regex, tree_output_str).group(0))
             pos_var = len(tree_output_str.replace('-', '').split()) - len(
                 tree_output_str[pos_tree_output:].replace('-', '').split())
