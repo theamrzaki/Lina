@@ -522,7 +522,7 @@ def callBot(var, option):
     tree_output = []
     imp_list_array["Noun"] = []
     tree_output_str = ""
-    return response
+    return response.split('.')[0]+'.'
 
 
 def get_relative_path(filename):
