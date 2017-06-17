@@ -182,12 +182,12 @@ def parse(sentence):
         return False, ""
 
     # display_tree(tree)
-    print("parse succeded")
+    print("parse succeeded")
 
     for i in range(len(tree)):
         traverse(tree[i], 0)
 
-    print("traverse succeded")
+    print("traverse succeeded")
     tree_output_str = ""
     for a in tree_output:
         tree_output_str += " - " + a
@@ -225,10 +225,10 @@ def parse(sentence):
         base_address = "http://api.duckduckgo.com/?q=" + imp_list_array["Noun"][0] + "&format=xml"
 
         super_page = requests.get(base_address)
-        print("requests succeded")
+        print("requests succeeded")
 
         soup_super_page = BeautifulSoup(super_page.content, "xml")
-        print("BeautifulSoup succeded")
+        print("BeautifulSoup succeeded")
 
         answer = soup_super_page.findAll('Abstract')[0].text
         if (answer == ""):
@@ -251,10 +251,10 @@ def parse(sentence):
             base_address = "http://api.duckduckgo.com/?q=" + fact_question + "&format=xml"
 
             super_page = requests.get(base_address)
-            print("request succeded")
+            print("request succeeded")
 
             soup_super_page = BeautifulSoup(super_page.content, "xml")
-            print("BeautifulSoup succeded")
+            print("BeautifulSoup succeeded")
 
             answer = soup_super_page.findAll('Abstract')[0].text
             if (answer == ""):
