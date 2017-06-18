@@ -34,7 +34,7 @@ dir = os.path.dirname(__file__)
 # -------------------------TF-IDF cosine similarity for intnents--------------------------------#
 def intents_test(sentence):
     if sentence == "set_alarm":
-        return "set_alarm", ("name", ""), ("hour", "10"), ("minute", "")
+        return "set_alarm", ("title", ""), ("hour", "10"), ("minute", "")
     elif sentence == "view_last_alarm":
         return "view_last_alarm"
     elif sentence == "call_contact":
