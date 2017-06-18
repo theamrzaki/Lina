@@ -419,7 +419,7 @@ def callBot(var, option):
         fact_question = parse(var)  # [False]  
         if (fact_question[0]):
             print "Fact Question"
-            print fact_question[1].encode('utf-8')
+            # print fact_question[1].encode('utf-8')
             response = fact_question[1].encode('utf-8')
             print
 
@@ -494,15 +494,15 @@ def callBot(var, option):
 
             print
 
-            print ("Lina :  " + response)
+            # print ("Lina :  " + response)
             # edit_option = raw_input("Do you need to edit the response of the question ?? y/n :")
 
             # if(edit_option=="y") :
             #       edit_real_time(option , line_id)
             # print
-            return ("message", response.split('.')[0] + '.')
+        return ("message", response.split('.')[0] + '.')
     else:
-        print ("intent", result)
+        # print ("intent", result)
         return ("intent", result)
 
         # else:  # can be an intent
