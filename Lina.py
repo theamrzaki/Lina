@@ -169,30 +169,33 @@ imp_list_array = {'Noun': []}
 
 
 def traverse(parent, x):
-    for node in parent:
-        if type(node) is nltk.Tree:
-            if node.label() == 'ROOT':
-                # "======== Sentence ========="
-                # print "Sentence:", " ".join(node.leaves()) , " +  type " , node.label()
-                a = 6
+    try:
+        for node in parent:
+            if type(node) is nltk.Tree:
+                if node.label() == 'ROOT':
+                    # "======== Sentence ========="
+                    # print "Sentence:", " ".join(node.leaves()) , " +  type " , node.label()
+                    a = 6
+                else:
+                    element_type = node.label()
+                    element_value = node.leaves()[0]
+                    element_sentence = node.leaves()
+
+                    if str(element_type) == 'NN' or str(element_type) == 'NNS' or str(element_type) == 'NNP' or str(
+                            element_type) == 'NNPS':
+                        imp_list_array['Noun'].append(str(element_value))
+
+                    # tree_output.append(node)
+
+                    traverse(node, x)
             else:
-                element_type = node.label()
-                element_value = node.leaves()[0]
-                element_sentence = node.leaves()
+                # tree_output.append(  node)
+                tree_output.append(parent.label())
 
-                if str(element_type) == 'NN' or str(element_type) == 'NNS' or str(element_type) == 'NNP' or str(
-                        element_type) == 'NNPS':
-                    imp_list_array['Noun'].append(str(element_value))
-
-                # tree_output.append(node)
-
-                traverse(node, x)
-        else:
-            # tree_output.append(  node)
-            tree_output.append(parent.label())
-
-            # print "Word:", node
-            a = 5
+                # print "Word:", node
+                a = 5
+    except:
+        tree_output.append('NN')
 
 
 def parse(sentence):
