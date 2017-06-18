@@ -503,7 +503,7 @@ def callBot(var, option):
             # if(edit_option=="y") :
             #       edit_real_time(option , line_id)
             # print
-        return ("message", response.split('.')[0] + '.')
+        return ("message", response.strip().split('.')[0] + '.')
     else:
         # print ("intent", result)
         return ("intent", result)
