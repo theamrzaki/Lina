@@ -34,21 +34,23 @@ dir = os.path.dirname(__file__)
 # -------------------------TF-IDF cosine similarity for intnents--------------------------------#
 def intents_test(sentence):
     if sentence == "set_alarm":
-        return "set_alarm", ("title", ""), ("hour", "10"), ("minute", "")
+        return ("name", "set_alarm", "title", "", "hour", "10", "minute", "")
     elif sentence == "view_last_alarm":
-        return "view_last_alarm"
+        return ("name", "view_last_alarm")
     elif sentence == "call_contact":
-        return "call_name", ("contact_name", "amr")
+        return ("name", "call_name", "contact_name", "amr")
     elif sentence == "call_number":
-        return "call_number", ("number", "01018777306")
+        return ("name", "call_number", "number", "01018777306")
     elif sentence == "view_contact":
-        return "view_contact", ("contact_name", "amr")
+        return ("name", "view_contact", "contact_name", "amr")
     elif sentence == "send_email":
-        return "send_email", ("email", "amr.m.ezzat@gmail.com"), ("subject", "hi"), ("text", "")
+        return ("name", "send_email", "email", "amr.m.ezzat@gmail.com", "subject", "hi", "text", "")
     elif sentence == "set_event":
-        return "set_event", ("start_time", "2017:0:18:7:30"), ("end_time", ""), ("title", "hello"), ("description", ""), ("location", "")
+        return (
+        "name", "set_event", "start_time", "2017:0:18:7:30", "end_time", "", "title", "hello", "description", "",
+        "location", "")
     else:
-        return "", "normal sentence"
+        return ("", "normal sentence")
 
 
 def intents(intent_test_sentence):
@@ -500,30 +502,29 @@ def callBot(var, option):
             # print
             return ("message", response.split('.')[0] + '.')
     else:
-        print ("intent",) + result
-        return ("intent",) + result
+        print ("intent", result)
+        return ("intent", result)
 
-    # else:  # can be an intent
-    #     # if(result[2]=="not sure"):
-    #     #    #    option = raw_input(random.choice(pre_offer_varaibles) + random.choice(offer_varaibles) + result[0] +" ? ")
-    #
-    #     #    #    if any(word in option for word in yes_variables):
-    #     #    #        print "action : "           +  result[0]
-    #     #    #        print "class : "            +  result[1]
-    #     #    #        print "certainty : "        +  result[2]
-    #     #    #        print "certainty level : "  +  result[3]
-    #     #    #        print
-    #     #    #    else:
-    #     #    #        print "Lina : "    +  talk_to_lina(var)
-    #     #    #        print
-    #
-    #     # else:#sure intent
-    #     print "action : " + result[0]
-    #     print "class : " + result[1]
-    #     print "certainty : " + result[2]
-    #     print "certainty level : " + result[3]
-    #     print
-
+        # else:  # can be an intent
+        #     # if(result[2]=="not sure"):
+        #     #    #    option = raw_input(random.choice(pre_offer_varaibles) + random.choice(offer_varaibles) + result[0] +" ? ")
+        #
+        #     #    #    if any(word in option for word in yes_variables):
+        #     #    #        print "action : "           +  result[0]
+        #     #    #        print "class : "            +  result[1]
+        #     #    #        print "certainty : "        +  result[2]
+        #     #    #        print "certainty level : "  +  result[3]
+        #     #    #        print
+        #     #    #    else:
+        #     #    #        print "Lina : "    +  talk_to_lina(var)
+        #     #    #        print
+        #
+        #     # else:#sure intent
+        #     print "action : " + result[0]
+        #     print "class : " + result[1]
+        #     print "certainty : " + result[2]
+        #     print "certainty level : " + result[3]
+        #     print
 
 
 def get_relative_path(filename):
