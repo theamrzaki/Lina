@@ -360,7 +360,7 @@ def extract_intents(text):
     whole_outputs.append(get_show_all_notes(text))
     if(len(sum(whole_outputs, [])) == 0):
         return("", "normal sentence")
-    return ("intent",) + tuple(sum(whole_outputs, []))
+    return "intent" , tuple(sum(whole_outputs, []))
 
 # text = """
 # 		set alarm morning alarm 10:30 and please, call 011 27 55 70 54. View contact Mo7amed 3zzat call
