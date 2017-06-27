@@ -63,11 +63,27 @@ def get_set_alarm(text):
 def trim(text):
     if len(text) <= 1:
         return ""
-    ending_marks = "\t\n ."
+    ending_marks = "."
     if text[-1] in ending_marks:
-        return trim(text[:-1])
+        return trim(text[:-1].strip())
+    elif text[0] in ending_marks:
+        return trim(text[1:].strip())
     else:
+        return text.strip()
+
+
+def remove_white_space(text):
+    white_space = "\t\n "
+    output = ""
+    if text == "":
         return text
+
+    for ch in text:
+        if ch in white_space:
+            pass
+        else:
+            output += ch
+    return output
 
 
 def get_view_next_alarm(text):
@@ -139,7 +155,11 @@ def get_call_contact(text):
     if match:
         matches = re.findall(call_contact_regex, text)
         for match in matches:
-            output.append(("call_contact", "contact_name(\'" + trim(match[0][5:]) + "\')"))
+            temp = remove_white_space(match[0][5:])
+            if trim(temp).isdigit():
+                pass
+            else:
+                output.append(("call_contact", "contact_name(\'" + trim(match[0][5:]) + "\')"))
 
     return output
 
@@ -358,17 +378,26 @@ def extract_intents(text):
     whole_outputs.append(get_remove_note(text))
     whole_outputs.append(get_last_saved_note(text))
     whole_outputs.append(get_show_all_notes(text))
-    if(len(sum(whole_outputs, [])) == 0):
-        return("", "normal sentence")
-    return ("intent",) + tuple(sum(whole_outputs, []))
+    if(sum(whole_outputs, []) == []):
+        return ("", "normal sentence")
+    return ("intent", sum(whole_outputs, []))
+
 
 # text = """
 # 		set alarm morning alarm 10:30 and please, call 011 27 55 70 54. View contact Mo7amed 3zzat call
 # 		M.Mostafa Elafasay. Try to send email to mohamed.anwar_vic@gmail.com [job offer] [You are totally rejected]
-# 		and send message to Amr 3zzat [How are you?].
+# 		and send message to Amr 3zzat [How are you?]. Call 011
 #
 # 		I'm in great mode, so let's know what is the day today and Save note [Great Moooode] [Yes].
 # 		And finally, show all notes out there :) Set alarm 10:00
 #
 # 		"""
 # print extract_intents(text)
+
+
+
+
+
+
+
+
