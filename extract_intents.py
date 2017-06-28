@@ -450,7 +450,7 @@ def extract_intents(text):
     whole_outputs.append(get_show_all_notes(text))
 
     if len(tuple(sum(whole_outputs, []))) == 0:
-        return ("","normal_sentence")
+        return ("","normal sentence")
 
     return ("intent", sum(whole_outputs, []))
 
