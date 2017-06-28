@@ -10,7 +10,7 @@ call_contact_regex = r"([Cc]all\s+([A-Z0-9]\w*[\s\.]?)+)"
 
 send_email_regex = r"([Ss]end\s+email\s+to\s+([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)\s?(\[.*\])?\s(\[.*\]))"
 
-# set_event_regex = r""
+set_event_regex = r"([Ss]et\s+event\s+(\d{4}:\d{1,2}:\d{1,2}:?\d{0,2}:?\d{0,2})\s*(\d{4}:\d{1,2}:\d{1,2}:?\d{0,2}:?\d{0,2})?\s+(\[\w*\])\s*(\[\w*\])?\s*(\[\w*\])?)"
 
 message_contact_regex = r"([Ss]end\s+message\s+to\s+(([A-Z0-9]\w*[\s\.]?)+)(\[.*\]))"
 message_number_regex = r"([Ss]end\s+message\s+to\s+\+?([0-9\s-]{3,})\s?(\[.*\]))"
@@ -19,19 +19,37 @@ show_date_regex = r"[Ss]how\s+date"
 show_time_regex = r"[Ss]how\s+time"
 show_date_time_regex = r"[Ss]how\s+date\s+time"
 
-start_timer_regex = r"([Ss]tart\s+timer\s(\d{1,2}):?(\d{0,2}))"
+start_timer_regex = r"([Ss]tart\s+(\d{1,2}):?(\d{0,2})\s+timer)"
 
-save_note_regex = r"([Ss]ave\s+note\s?(\[.*\])? (\[.*\]))"
-remove_note_regex = r"([Rr]emove\s+note\s(\[.*\]))"
+save_note_regex = r"([Ss]ave\s+note\s+(\[.*\])\s*(\[.*\])?)"
+show_note_regex = r"([Ss]how\s+(.*)\s+note)"
+edit_note_regex = r"([Ee]dit\s+note\s+(\[.*\])\s+(\[.*\]))"
+remove_note_regex = r"([Rr]emove\s+note\s+(\[.*\]))"
 last_saved_note_regex = r"[Ll]ast\s+saved\s+note"
 show_all_notes_regex = r"[Ss]how\s+all\s+notes\s+regex"
+last_saved_note_regex = [r"last_save_note", \
+                         r"(show\s+me)?\s*last\s+(saved|created)?\s*note"]
+show_all_notes_regex = [r"show_all_notes", \
+                        r"(show\s+me)?\s*all\s+(created)?\s*notes"]
 
 
 ###
 
 ########################## set_alarm ##########################
+def trim(text):
+    if len(text) <= 1:
+        return ""
+    ending_marks = "."
+    if text[-1] in ending_marks:
+        return trim(text[:-1].strip())
+    elif text[0] in ending_marks:
+        return trim(text[1:].strip())
+    else:
+        return text.strip()
+
+
 # text ="""
-# 		set alarm morning alarm 10:30
+# 		set alarm morning alarm for 10:30
 # 		Set alarm 10:00
 # 		Set alarm 12-20 it causes an error
 # 		Set alarm 10
@@ -60,18 +78,6 @@ def get_set_alarm(text):
 
 
 ########################## view_next_alarm ##########################
-def trim(text):
-    if len(text) <= 1:
-        return ""
-    ending_marks = "."
-    if text[-1] in ending_marks:
-        return trim(text[:-1].strip())
-    elif text[0] in ending_marks:
-        return trim(text[1:].strip())
-    else:
-        return text.strip()
-
-
 def remove_white_space(text):
     white_space = "\t\n "
     output = ""
@@ -186,6 +192,31 @@ def get_send_email(text):
     return output
 
 
+########################## set_event ##########################
+# text = """
+# 		set event     2017:8:01:14:00           2017:8:01:14:00       [title] [des] [location]
+# 		set event 2017:8:14:17:32        [title] [description]
+# 		set event 2087:8:30        [location]
+# 		set event 2117:8:1        []
+# 		Set event 12:3:4 []
+# 		"""
+
+def get_set_event(text):
+    match = re.search(set_event_regex, text)
+    output = []
+    if match:
+        matches = re.findall(set_event_regex, text)
+        for match in matches:
+            output.append(("set_event", \
+                           "start_time(\'" + match[1] + "\')", \
+                           "end_time(\'" + default(match[2], 0) + "\')", \
+                           "title(\'" + match[3][1:-1] + "\')", \
+                           "description(\'" + match[4][1:-1] + "\')", \
+                           "location(\'" + match[5][1:-1] + "\')"))
+
+    return output
+
+
 ########################## message_contact ##########################
 # text = """
 # 		send message to Amr 3zzat [How are you?]
@@ -284,9 +315,10 @@ def get_show_date_time(text):
 # 		start timer morning alarm 10:30
 # 		start timer 10:00
 # 		start timer 12-20 it causes an error
-# 		start timer 10
-# 		start timer 1:1
+# 		start 10 timer
+# 		start 1:1 timer
 # 		start timer now
+# 		start now timer
 # 	"""
 
 def get_start_timer(text):
@@ -320,6 +352,42 @@ def get_save_note(text):
     return output
 
 
+########################## show_note ##########################
+# text = """
+# 		Please, try to show [job offer] note
+# 		show Morning Routine note
+# 		and don't forget to show note.
+# 		"""
+
+def get_show_note(text):
+    match = re.search(show_note_regex, text)
+    output = []
+    if match:
+        matches = re.findall(show_note_regex, text)
+        for match in matches:
+            output.append(("show_note", "title(\'" + match[1] + "\')"))
+    return output
+
+
+########################## edit_note ##########################
+# text = """
+# 		try to edit note [job offer] [You are totally rejected]
+# 		let's edit      note      [we are going to be OK [now, we are not], isA]
+# 		edit note [no]         [noo]
+# 		"""
+
+def get_edit_note(text):
+    match = re.search(edit_note_regex, text)
+    output = []
+    if match:
+        matches = re.findall(edit_note_regex, text)
+        for match in matches:
+            output.append(("edit_note", "title(\'" + match[1][1:-1] + "\')", \
+                           "description(\'" + match[2][1:-1] + "\')"))
+
+    return output
+
+
 ########################## remove_note ##########################
 # text = """
 # 		try to remove note [job offer]
@@ -337,10 +405,6 @@ def get_remove_note(text):
 
 
 ########################## last-saved_note ##########################
-last_saved_note_regex = [r"last_save_note", \
-                         r"(show\s+me)?\s*last\s+(saved|created)?\s*note"]
-
-
 def get_last_saved_note(text):
     for x in last_saved_note_regex:
         if re.search(x, text, flags=re.IGNORECASE | re.MULTILINE):
@@ -349,10 +413,6 @@ def get_last_saved_note(text):
 
 
 ########################## show-all_notes ##########################
-show_all_notes_regex = [r"show_all_notes", \
-                        r"(show\s+me)?\s*all\s+(created)?\s*notes"]
-
-
 def get_show_all_notes(text):
     for x in show_all_notes_regex:
         if re.search(x, text, flags=re.IGNORECASE | re.MULTILINE):
@@ -364,22 +424,34 @@ def extract_intents(text):
     whole_outputs = []
     whole_outputs.append(get_set_alarm(text))
     whole_outputs.append(get_view_next_alarm(text))
+
     whole_outputs.append(get_call_number(text))
     whole_outputs.append(get_view_contact(text))
     whole_outputs.append(get_call_contact(text))
+
     whole_outputs.append(get_send_email(text))
+
+    whole_outputs.append(get_set_event(text))
+
     whole_outputs.append(get_message_contact(text))
     whole_outputs.append(get_message_number(text))
+
     whole_outputs.append(get_show_date(text))
     whole_outputs.append(get_show_time(text))
     whole_outputs.append(get_show_date_time(text))
+
     whole_outputs.append(get_start_timer(text))
+
     whole_outputs.append(get_save_note(text))
+    whole_outputs.append(get_edit_note(text))
+    whole_outputs.append(get_show_note(text))
     whole_outputs.append(get_remove_note(text))
     whole_outputs.append(get_last_saved_note(text))
     whole_outputs.append(get_show_all_notes(text))
-    if(sum(whole_outputs, []) == []):
-        return ("", "normal sentence")
+
+    if len(tuple(sum(whole_outputs, []))) == 0:
+        return ("","normal_sentence")
+
     return ("intent", sum(whole_outputs, []))
 
 
@@ -390,8 +462,10 @@ def extract_intents(text):
 #
 # 		I'm in great mode, so let's know what is the day today and Save note [Great Moooode] [Yes].
 # 		And finally, show all notes out there :) Set alarm 10:00
+# 		set event 2017:8:14:17:32        [title] [description] [location]
 #
 # 		"""
+#
 # print extract_intents(text)
 
 
