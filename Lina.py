@@ -415,7 +415,6 @@ def edit_real_time(dataset_number, LineID):
 
 
 def callBot(var, option):
-    conversations_dir = os.path.join(dir, "Conversations")
     result = extract_intents(var)
     response = ""
     if (result[1] == "normal sentence"):
