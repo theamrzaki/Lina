@@ -70,7 +70,7 @@ def get_set_alarm(text):
         matches = re.findall(set_alarm_regex, text)
 
         for match in matches:
-            output.append(("set_alarm", "name(\'" + trim(match[1]) + "\')", \
+            output.append(("set_alarm", "title(\'" + trim(match[1]) + "\')", \
                            "hour(\'" + default(match[3], 0) + "\')", \
                            "minute(\'" + default(match[4], 0) + "\')"))
 
@@ -450,7 +450,7 @@ def extract_intents(text):
     whole_outputs.append(get_show_all_notes(text))
 
     if len(tuple(sum(whole_outputs, []))) == 0:
-        return ("","normal_sentence")
+        return ("","normal sentence")
 
     return ("intent", sum(whole_outputs, []))
 
