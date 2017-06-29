@@ -2,7 +2,7 @@ import re
 
 ### These are the regex that we are going to use
 set_alarm_regex = r"([Ss]et alarm\s+([\D ]*)((\d{1,2}):?(\d{0,2}))?)"
-view_next_alarm_regex = r"view\s+next\s+alarm"
+view_next_alarm_regex = r"[Vv]iew\s+next\s+alarm"
 
 call_number_regex = r"([Cc]all\s+\+?([0-9\s-]){3,})"
 view_contact_regex = r"([Vv]iew\s+contact\s+([A-Z0-9]\w*[\s\.]?)+)"
@@ -27,10 +27,6 @@ edit_note_regex = r"([Ee]dit\s+note\s+(\[.*\])\s+(\[.*\]))"
 remove_note_regex = r"([Rr]emove\s+note\s+(\[.*\]))"
 last_saved_note_regex = r"[Ll]ast\s+saved\s+note"
 show_all_notes_regex = r"[Ss]how\s+all\s+notes\s+regex"
-last_saved_note_regex = [r"last_save_note", \
-                         r"(show\s+me)?\s*last\s+(saved|created)?\s*note"]
-show_all_notes_regex = [r"show_all_notes", \
-                        r"(show\s+me)?\s*all\s+(created)?\s*notes"]
 
 
 ###
@@ -261,50 +257,30 @@ def get_message_number(text):
 
 
 ########################## show_date ##########################
-show_date_regex = [r"show_date", \
-                   r"what\s+is\s+the\s+date\,?\s*today", \
-                   r"what\s+is\s+today's\s+date", \
-                   r"what\s+day\s+of\s+the\s+week\s+is\s+it", \
-                   r"what\s+date\s+is\s+today", \
-                   r"what\s+day\s+of\s+the\s+month\s+is\s+it", \
-                   r"^date[\s\?\!\.]*$",
-                   r"today's\s+date"]
 
 
 def get_show_date(text):
-    for x in show_date_regex:
+    for x in [show_date_regex]:
         if re.search(x, text, flags=re.IGNORECASE | re.MULTILINE):
             return ["show_date"]
     return []
 
 
 ########################## show_time ##########################
-show_time_regex = [r"show_time", \
-                   r"what\s+is\s+the\s+time", \
-                   r"what\s+time\s+is\s+it", \
-                   r"tell\s+me\s+the\s+time", \
-                   r"^time[\s\?\!\.]*$"]
 
 
 def get_show_time(text):
-    for x in show_time_regex:
+    for x in [show_time_regex]:
         if re.search(x, text, flags=re.IGNORECASE | re.MULTILINE):
             return ["show_time"]
     return []
 
 
 ########################## show_date_time ##########################
-show_date_time_regex = [r"show_date_time", \
-                        r"what\s+is\s+the\s+time\s+and\s+date\,?\s*now", \
-                        r"time\s+and\s+date", \
-                        r"what\s+date\s+and\s+time\s+\s+is\s+it\,?\s*now", \
-                        r"date\s+and\s+time", \
-                        r"what\s+is\s+today\s+and\s+what\s+time\s+is\s+it", \
-                        r"today\s+and\s+time"]
 
 
 def get_show_date_time(text):
-    for x in show_date_time_regex:
+    for x in [show_date_time_regex]:
         if re.search(x, text, flags=re.IGNORECASE | re.MULTILINE):
             return ["show_date_time"]
     return []
@@ -406,7 +382,7 @@ def get_remove_note(text):
 
 ########################## last-saved_note ##########################
 def get_last_saved_note(text):
-    for x in last_saved_note_regex:
+    for x in [last_saved_note_regex]:
         if re.search(x, text, flags=re.IGNORECASE | re.MULTILINE):
             return ["last_saved_note"]
     return []
@@ -414,13 +390,14 @@ def get_last_saved_note(text):
 
 ########################## show-all_notes ##########################
 def get_show_all_notes(text):
-    for x in show_all_notes_regex:
+    for x in [show_all_notes_regex]:
         if re.search(x, text, flags=re.IGNORECASE | re.MULTILINE):
             return ["show_all_notes"]
     return []
 
 
 def extract_intents(text):
+    text = text.lower()
     whole_outputs = []
     whole_outputs.append(get_set_alarm(text))
     whole_outputs.append(get_view_next_alarm(text))
