@@ -92,7 +92,7 @@ def get_view_next_alarm(text):
     match = re.search(view_next_alarm_regex, text)
     output = []
     if match:
-        output.append(("view_next_alarm"))
+        output.append(("view_next_alarm",))
 
     return output
 
@@ -262,7 +262,7 @@ def get_message_number(text):
 def get_show_date(text):
     for x in [show_date_regex]:
         if re.search(x, text, flags=re.IGNORECASE | re.MULTILINE):
-            return ["show_date"]
+            return [("show_date",)]
     return []
 
 
@@ -272,7 +272,7 @@ def get_show_date(text):
 def get_show_time(text):
     for x in [show_time_regex]:
         if re.search(x, text, flags=re.IGNORECASE | re.MULTILINE):
-            return ["show_time"]
+            return [("show_time",)]
     return []
 
 
@@ -282,7 +282,7 @@ def get_show_time(text):
 def get_show_date_time(text):
     for x in [show_date_time_regex]:
         if re.search(x, text, flags=re.IGNORECASE | re.MULTILINE):
-            return ["show_date_time"]
+            return [("show_date_time",)]
     return []
 
 
@@ -384,7 +384,7 @@ def get_remove_note(text):
 def get_last_saved_note(text):
     for x in [last_saved_note_regex]:
         if re.search(x, text, flags=re.IGNORECASE | re.MULTILINE):
-            return ["last_saved_note"]
+            return [("last_saved_note",)]
     return []
 
 
@@ -392,7 +392,7 @@ def get_last_saved_note(text):
 def get_show_all_notes(text):
     for x in [show_all_notes_regex]:
         if re.search(x, text, flags=re.IGNORECASE | re.MULTILINE):
-            return ["show_all_notes"]
+            return [("show_all_notes",)]
     return []
 
 
