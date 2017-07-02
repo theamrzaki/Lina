@@ -9,9 +9,7 @@ import timeit
 import pickle
 import random
 
-########karim commented this########
 from stat_parser.parser import Parser, display_tree
-####################################
 # from nltk.chunk import ne_chunk
 # from nltk.tag import pos_tag
 # from nltk.tokenize import word_tokenize
@@ -31,10 +29,8 @@ import filter
 #______Intent classifier Youssef_____
 import pandas
 import sklearn
-from sklearn.feature_extraction.text import TfidfVectorizer
-import nltk
 import string
-import numpy as np
+
 
 
 # -----------------------------------$$ Global Variables $$-------------------------------------#
@@ -163,7 +159,8 @@ def _getFormattedPlainText(datainput):
 
 #return intent type, action
 def getAnswer(inputString, threshold):
-    data = pandas.read_csv("intents.csv")
+    intents_path = os.path.join(dir, "intents.csv")
+    data = pandas.read_csv(intents_path)
 
     inputString = inputString.lower()
     inputString = inputString.translate(None, string.punctuation)
@@ -400,21 +397,27 @@ def talk_to_lina(test_set_sentence, csv_file_path, tfidf_vectorizer_pikle_path, 
 # -----------------------Edit Module (RealTime Learn)----------------------#
 def edit_real_time(new_sentence,dataset_number, LineID):
     dataset_path = ["Lina_all.csv",
-                    "Conversations/action_conversation.csv",
-                    "Conversations/animation_conversation.csv",
-                    "Conversations/comedy_conversation.csv",
-                    "Conversations/crime_conversation.csv",
-                    "Conversations/drama_conversation.csv",
-                    "Conversations/fantasy_conversation.csv",
-                    "Conversations/film-noir.csv_conversation.csv",
-                    "Conversations/horror_conversation.csv",
-                    "Conversations/romance_conversation.csv",
-                    "Conversations/sci-fi_conversation.csv",
-                    "Conversations/war_conversation.csv"]
+                    "action_conversation.csv",
+                    "animation_conversation.csv",
+                    "comedy_conversation.csv",
+                    "crime_conversation.csv",
+                    "drama_conversation.csv",
+                    "fantasy_conversation.csv",
+                    "film-noir.csv_conversation.csv",
+                    "horror_conversation.csv",
+                    "romance_conversation.csv",
+                    "sci-fi_conversation.csv",
+                    "war_conversation.csv"]
     print
     if filter.curse_no_marks(new_sentence):
         try:
-            f = open(dataset_path[dataset_number], 'r')
+            ##relaive path
+            if(dataset_number==0):
+                file_path = os.path.join(dir, dataset_path[dataset_number]) 
+            else:
+                file_path = get_relative_path(dataset_path[dataset_number])  
+            ##end relative path
+            f = open(file_path, 'r')
             reader = csv.reader(f)
             mylist = list(reader)
             f.close()
@@ -427,7 +430,7 @@ def edit_real_time(new_sentence,dataset_number, LineID):
             else:  # add new suggestion
                 mylist[LineID - 1][1] += delimeter + new_sentence
 
-            my_new_list = open(dataset_path[dataset_number], 'wb')
+            my_new_list = open(file_path, 'wb')
             csv_writer = csv.writer(my_new_list)
             csv_writer.writerows(mylist)
             my_new_list.close()
