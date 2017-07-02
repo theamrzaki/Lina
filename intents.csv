@@ -1,0 +1,34 @@
+Input,Action,IntentType
+most recent alarm,most recent alarm,alarm
+most coming alarm,most recent alarm,alarm
+where am I,open map,map
+would you please open map,open map,map
+launch map,open map,map
+What time is it now,Time now,Time
+Can I ask you what is the time,Time now,Time
+"What is the time, please",Time now,Time
+Can you please tell me what is the time,Time now,Time
+Do you have the time?,Time now,Time
+Do you know what time it is?,Time now,Time
+"Can you tell me what time it is, please?",Time now,Time
+What day is ?,Date for a keyword,Date
+What day is it  ?,Date for a keyword,Date
+What's the date ?,Date Day now,Date
+what day is it ?,Date Day now,Date
+What is date? ,Date now,Date
+Check email,read email,Email
+Do I have any new messages?,Find Email,Email
+what to watch in movie,suggest movie,movie
+tell me what to watch,suggest movie,movie
+suggest a movie,suggest movie,movie
+what to watch in movie,suggest movie,movie
+tell me what to watch,suggest movie,movie
+suggest a movie,suggest movie,movie
+recommend me a movie, suggest movie, movie
+Can you tell me the weather ? ,Check Weather,weather
+How is the weather today ? ,Check Weather,weather
+Is it hot today ? ,Check Weather,weather
+Is it cold today ? ,Check Weather,weather
+Is it going to rain today ? ,Check Weather,weather
+will it rain today ? ,Check Weather,weather
+How is the humidity today ? ,Check Weather,weather
