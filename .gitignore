@@ -246,3 +246,6 @@ ModelManifest.xml
 
 # compiled python
 *.pyc
+
+# pickle files
+*.pickle
