@@ -381,7 +381,7 @@ def callBot(var, option):
 
                 print ("Lina :  " + response)
 
-            return "message", response.capitalize().strip(), option, line_id
+            return "message", (response.capitalize().strip(), option, line_id)
 
         else:
             print ("youssef intent", intentType)
