@@ -25,13 +25,10 @@ import requests
 # _____Curse Fiter_____
 import filter
 
-
-#______Intent classifier Youssef_____
+# ______Intent classifier Youssef_____
 import pandas
 import sklearn
 import string
-
-
 
 # -----------------------------------$$ Global Variables $$-------------------------------------#
 delimeter = "_+^$#*#$^+_"
@@ -39,8 +36,8 @@ dir = os.path.dirname(__file__)
 
 
 # -------------------------TF-IDF cosine similarity for intnents--------------------------------#
-#old intent classifier
-#def intents(intent_test_sentence):
+# old intent classifier
+# def intents(intent_test_sentence):
 #    intents_sentences = []
 #    intents_sentences.append("intent")  # just to adjuxt index
 #    test_set = (intent_test_sentence, "")
@@ -148,22 +145,23 @@ dir = os.path.dirname(__file__)
 #                    return row[1], row[2], "sure", str(max)
 #                break
 
-#Youssef's intent classifier
+# Youssef's intent classifier
 def _getFormattedPlainText(datainput):
     text = ""
     for data in datainput:
         text += str(data) + "\n"
     text = text.lower()
-    text = re.sub('['+string.punctuation+']', '', text)
+    text = re.sub('[' + string.punctuation + ']', '', text)
     return text
 
-#return intent type, action
+
+# return intent type, action
 def getAnswer(inputString, threshold):
     intents_path = os.path.join(dir, "intents.csv")
     data = pandas.read_csv(intents_path)
 
     inputString = inputString.lower()
-    inputString = re.sub('['+string.punctuation+']', '', inputString)
+    inputString = re.sub('[' + string.punctuation + ']', '', inputString)
 
     trainDocs = _getFormattedPlainText(data.Input)
     trainDocsSplitted = trainDocs.split('\n')
@@ -179,13 +177,11 @@ def getAnswer(inputString, threshold):
 
     maxvalue = testSim.max()
     index = np.where(testSim == maxvalue)[0]
-    if(maxvalue < threshold):
+    if (maxvalue < threshold):
         return (None, None)
     else:
         _index = np.random.choice(index)
-        return(data.IntentType[_index], data.Action[_index])
-
-
+        return (data.IntentType[_index], data.Action[_index])
 
 
 # -------------------------Parse and see if it is for internet----------------------------------#
@@ -395,7 +391,7 @@ def talk_to_lina(test_set_sentence, csv_file_path, tfidf_vectorizer_pikle_path, 
 # -------------------------------------------------------------------------#
 
 # -----------------------Edit Module (RealTime Learn)----------------------#
-def edit_real_time(new_sentence,dataset_number, LineID):
+def edit_real_time(new_sentence, dataset_number, LineID):
     dataset_path = ["Lina_all.csv",
                     "action_conversation.csv",
                     "animation_conversation.csv",
@@ -412,7 +408,7 @@ def edit_real_time(new_sentence,dataset_number, LineID):
     if filter.curse_no_marks(new_sentence):
         try:
             ##relaive path
-            if(dataset_number==0):
+            if (dataset_number == 0):
                 file_path = os.path.join(dir, dataset_path[dataset_number])
             else:
                 file_path = get_relative_path(dataset_path[dataset_number])
@@ -448,16 +444,17 @@ def edit_real_time(new_sentence,dataset_number, LineID):
 def callBot(var, option):
     result = extract_intents(var)
     response = ""
-    if (result[1] == "normal sentence"):    #not anwar intent
+    if (result[1] == "normal sentence"):  # not anwar intent
 
         (intentType, action) = getAnswer(var, 0.7)
 
-        if intentType == None:      #not youssef intent
+        if intentType == None:  # not youssef intent
             fact_question = parse(var)  # [False]
+            line_id = -1
             if (fact_question[0]):
                 print "Fact Question"
                 # print fact_question[1].encode('utf-8')
-                response = fact_question[1].encode('utf-8')
+                response = fact_question[1].encode('utf-8').split('.')[0] + '.'
                 print
 
             else:
@@ -466,7 +463,6 @@ def callBot(var, option):
                 print (
                     "general:0   action:1   animation:2   comedy:3   crime:4  drama:5   fantasy:6    filmnoir:7   horror:8  romance:9   scifi:10   war:11")
                 # option = int(raw_input("enter option as number: ")   )
-
                 if option == 0:
                     Lina_all_path = os.path.join(dir, "Lina_all.csv")
                     tfidf_vectorizer_april_path = os.path.join(dir, "tfidf_vectorizer_april.pickle")
@@ -532,26 +528,19 @@ def callBot(var, option):
                 print
 
                 print ("Lina :  " + response)
-                edit_option = raw_input("Do you need to edit the response of the question ?? y/n :")
 
-                if(edit_option=="y") :
-                      new_sentence = raw_input("Your edit to the previous Lina's response : ")
-                      edit_real_time(new_sentence , option , line_id)
-                print
-            return "message", response.capitalize().strip().split('.')[0] + '.'
+            return "message", response.capitalize().strip(), option, line_id
 
         else:
             print ("youssef intent", intentType)
-            return   intentType #, action
+            return intentType  # , action
     else:
         # print ("intent", result)
         print ("anwar intent", result)
-        return result      #anwar intent
+        return result  # anwar intent
 
 
 def get_relative_path(filename):
     conversations_dir = os.path.join(dir, "Conversations")
     relative_path = os.path.join(conversations_dir, filename)
     return relative_path
-
-
