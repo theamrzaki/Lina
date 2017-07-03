@@ -154,7 +154,7 @@ def _getFormattedPlainText(datainput):
     for data in datainput:
         text += str(data) + "\n"
     text = text.lower()
-    text = text.translate(None, string.punctuation)
+    text = re.sub('['+string.punctuation+']', '', text)
     return text
 
 #return intent type, action
@@ -163,7 +163,7 @@ def getAnswer(inputString, threshold):
     data = pandas.read_csv(intents_path)
 
     inputString = inputString.lower()
-    inputString = inputString.translate(None, string.punctuation)
+    inputString = re.sub('['+string.punctuation+']', '', inputString)
 
     trainDocs = _getFormattedPlainText(data.Input)
     trainDocsSplitted = trainDocs.split('\n')
@@ -413,9 +413,9 @@ def edit_real_time(new_sentence,dataset_number, LineID):
         try:
             ##relaive path
             if(dataset_number==0):
-                file_path = os.path.join(dir, dataset_path[dataset_number]) 
+                file_path = os.path.join(dir, dataset_path[dataset_number])
             else:
-                file_path = get_relative_path(dataset_path[dataset_number])  
+                file_path = get_relative_path(dataset_path[dataset_number])
             ##end relative path
             f = open(file_path, 'r')
             reader = csv.reader(f)
@@ -533,7 +533,7 @@ def callBot(var, option):
 
                 print ("Lina :  " + response)
                 edit_option = raw_input("Do you need to edit the response of the question ?? y/n :")
-            
+
                 if(edit_option=="y") :
                       new_sentence = raw_input("Your edit to the previous Lina's response : ")
                       edit_real_time(new_sentence , option , line_id)
