@@ -283,10 +283,12 @@ def edit_real_time(new_sentence, dataset_number, LineID):
             my_new_list.close()
             print ("thanks for your support")
             print
+            return "edit_succeeded"
         except:
-            pass
+            return "edit_failed"
     else:
         print ("contains swear word")
+        return "swear_word"
 
 
 # -------------------------------------------------------------------------#
