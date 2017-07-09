@@ -139,14 +139,19 @@ def parse(sentence):
         print("BeautifulSoup succeeded")
 
         answer = soup_super_page.findAll('Abstract')[0].text
+        Image =  soup_super_page.findAll('Image')[0].text
         if (answer == ""):
             answer = soup_super_page.findAll('Text')[0].text
-        return True, answer
+
+        return True, answer , Image
     except Exception as exception:
         print ("error2", exception)
         print (type(exception).__name__)
         print (exception.__class__.__name__)
-        return False, ""  # -----------------------General DataSet   &   Movies Lines----------------#
+        return False, "" 
+
+
+# -----------------------General DataSet   &   Movies Lines----------------#
 
 
 def talk_to_lina(test_set_sentence, csv_file_path, tfidf_vectorizer_pikle_path, tfidf_matrix_train_pikle_path):
@@ -239,6 +244,96 @@ def talk_to_lina(test_set_sentence, csv_file_path, tfidf_vectorizer_pikle_path, 
                 break
 
 
+def talk_to_lina_primary(test_set_sentence, csv_file_path, tfidf_vectorizer_pikle_path, tfidf_matrix_train_pikle_path):
+    i = 0
+    sentences = []
+
+    # enter your test sentence
+    test_set = (test_set_sentence, "")
+
+    # 3ashan yzabt el indexes
+    sentences.append(" No you.")
+    sentences.append(" No you.")
+
+    try:
+        ##--------------to use------------------#
+        f = open(tfidf_vectorizer_pikle_path, 'rb')
+        tfidf_vectorizer = pickle.load(f)
+        f.close()
+
+        f = open(tfidf_matrix_train_pikle_path, 'rb')
+        tfidf_matrix_train = pickle.load(f)
+        f.close()
+        # ----------------------------------------#
+    except:
+        # ---------------to train------------------#
+        start = timeit.default_timer()
+
+        # enter jabberwakky sentence
+        with open(csv_file_path, "r") as sentences_file:
+            reader = csv.reader(sentences_file, delimiter=',')
+            # reader.next()
+            # reader.next()
+            for row in reader:
+                # if i==stop_at_sentence:
+                #    break
+                sentences.append(row[0])
+                i += 1
+
+        tfidf_vectorizer = TfidfVectorizer()
+        tfidf_matrix_train = tfidf_vectorizer.fit_transform(sentences)  # finds the tfidf score with normalization
+        # tfidf_matrix_test =tfidf_vectorizer.transform(test_set)
+        stop = timeit.default_timer()
+        print ("training time took was : ")
+        print stop - start
+
+        f = open(tfidf_vectorizer_pikle_path, 'wb')
+        pickle.dump(tfidf_vectorizer, f)
+        f.close()
+
+        f = open(tfidf_matrix_train_pikle_path, 'wb')
+        pickle.dump(tfidf_matrix_train, f)
+        f.close()
+        # -----------------------------------------#
+
+    tfidf_matrix_test = tfidf_vectorizer.transform(test_set)
+
+    cosine = cosine_similarity(tfidf_matrix_test, tfidf_matrix_train)
+
+    cosine = np.delete(cosine, 0)
+    max = cosine.max()
+    response_index = 0
+    if (max > 0.9):
+        new_max = max - 0.01
+        list = np.where(cosine > new_max)
+        print ("number of responses with 0.01 from max = " + str(list[0].size))
+        response_index = random.choice(list[0])
+
+    else:
+        print ("not sure")
+        print ("max is = " + str(max))
+        response_index = np.where(cosine == max)[0][0] + 2  # no offset at all +3
+        return "null", "null",
+
+    j = 0
+
+    with open(csv_file_path, "r") as sentences_file:
+        reader = csv.reader(sentences_file, delimiter=',')
+        for row in reader:
+            j += 1  # we begin with 1 not 0 &    j is initialized by 0
+            if j == response_index:
+
+                if delimeter in row[1]:
+                    # get newest suggestion
+                    answer_row = row[1].split(delimeter)
+                    row[1] = answer_row[1]
+
+                else:  # add new suggestion
+                    note = "just return old original suggestion"
+
+                return row[1], response_index,
+                break
+
 # -------------------------------------------------------------------------#
 
 # -----------------------Edit Module (RealTime Learn)----------------------#
@@ -295,6 +390,19 @@ def edit_real_time(new_sentence, dataset_number, LineID):
 
 
 def callBot(var, option):
+    "Lina primary.csv"
+    get_relative_path("action_conversation.csv")
+
+    Lina_all_path_primary                 =    get_relative_path("Lina primary.csv")
+    tfidf_vectorizer_april_path_primary   =    get_relative_path("tfidf_vectorizer_april_primary.pickle")
+    tfidf_matrix_train_april_path_primary =    get_relative_path("tfidf_matrix_train_april_primary.pickle")
+
+    response_primary , line_id_primary  = talk_to_lina_primary(var, Lina_all_path_primary, tfidf_vectorizer_april_path_primary,
+                                                 tfidf_matrix_train_april_path_primary)
+
+    if (response_primary !="null") :
+            return "message", (response_primary.capitalize().strip(), option, line_id_primary)
+
     result = extract_intents(var)
 
     response = ""
@@ -304,7 +412,7 @@ def callBot(var, option):
         if (fact_question[0]):
             print "Fact Question"
             # print fact_question[1].encode('utf-8')
-            response = fact_question[1].encode('utf-8').split('.')[0] + '.'
+            response = fact_question[1].encode('utf-8').split('.')[0] + '.'   +    fact_question[2]
             print
 
         else:
@@ -387,3 +495,9 @@ def get_relative_path(filename):
     conversations_dir = os.path.join(dir, "Conversations")
     relative_path = os.path.join(conversations_dir, filename)
     return relative_path
+
+
+#local test 
+while 1:
+    var = raw_input("Talk to Lina: ")
+    print  callBot(var , 1)
