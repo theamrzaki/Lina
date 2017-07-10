@@ -513,9 +513,10 @@ def callBot(var, option):
                 result = loads(resultStr)
                 resultString = "{0}({1}):\n{5}\n{2}\n{3}\n{4},".format(result['Original Title'], result["rating"],
                                                                        result["Overview"], result["poster"],
-                                                                       result["Trailer Link"], map(
-                        lambda genre: genre.encode('ascii', 'replace'),
-                        result['genres']))
+                                                                       result["Trailer Link"],
+                                                                       map(lambda genre: genre.encode('ascii',
+                                                                                                      'replace'),
+                                                                           result['genres']))
                 intents_full_result.append(('display_message', resultString))
             else:
                 intents_full_result.append(('display_message', resultStr))
@@ -525,9 +526,10 @@ def callBot(var, option):
                 result = loads(resultStr)
                 resultString = "{0}({1}):\n{5}\n{2}\n{3}\n{4},".format(result['Original Title'], result["rating"],
                                                                        result["Overview"], result["poster"],
-                                                                       result["Trailer Link"], map(
-                        lambda genre: genre.encode('ascii', 'replace'),
-                        result['genres']))
+                                                                       result["Trailer Link"],
+                                                                       map(lambda genre: genre.encode('ascii',
+                                                                                                      'replace'),
+                                                                           result['genres']))
                 intents_full_result.append(('display_message', resultString))
                 intents_full_result.append(('play_trailer', "trailer_link(" + result["Trailer Link"] + ")"))
             else:
