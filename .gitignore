@@ -250,3 +250,5 @@ ModelManifest.xml
 # pickle files
 *.pickle
 !curses.pickle
+.idea/
+test.py
