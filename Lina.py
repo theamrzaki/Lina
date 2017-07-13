@@ -423,7 +423,7 @@ def callBot(var, option):
             print "action : "
             print ("ENTER CHARACTER:")
             print (
-                "general:0   action:1   animation:2   comedy:3   crime:4  drama:5   fantasy:6    filmnoir:7   horror:8  romance:9   scifi:10   war:11")
+                "general:0   action:1   animation:2   comedy:3   crime:4  drama:5   fantasy:6    filmnoir:7   horror:8  romance:9   scifi:10   war:11 franco:12")
             # option = int(raw_input("enter option as number: ")   )
             if option == 0:
                 Lina_all_path = os.path.join(dir, "Lina_all.csv")
@@ -486,6 +486,11 @@ def callBot(var, option):
                 response, line_id = talk_to_lina(var, get_relative_path("war_conversation.csv"),
                                                  get_relative_path('tfidf_vectorizer_war.pickle'),
                                                  get_relative_path('tfidf_matrix_train_war.pickle'))
+
+            elif option == 12:
+                response, line_id = talk_to_lina(var, get_relative_path("Francko_all.csv"),
+                                                 get_relative_path('tfidf_vectorizer_Francko_all.pickle'),
+                                                 get_relative_path('tfidf_matrix_train_Francko_all.pickle'))
 
             print
 
@@ -569,3 +574,10 @@ def get_relative_path(filename):
     conversations_dir = os.path.join(dir, "Conversations")
     relative_path = os.path.join(conversations_dir, filename)
     return relative_path
+
+
+
+#to test offline
+while 1:
+    chat_sentance  = raw_input("Talk to Lina :")
+    callBot(chat_sentance , 12)
